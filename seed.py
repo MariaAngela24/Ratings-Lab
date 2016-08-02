@@ -3,11 +3,11 @@
 from sqlalchemy import func
 from model import User
 # from model import Rating
-# from model import Movie
+from model import Movie
 
 from model import connect_to_db, db
 from server import app
-
+from datetime import date 
 
 def load_users():
     """Load users from u.user into database."""
@@ -37,7 +37,26 @@ def load_users():
 def load_movies():
     """Load movies from u.item into database."""
 
+    print "Movie"
 
+    Movie.query.delete()
+
+
+    for row in open("seed_data/u.item"):
+        row = row.rstrip()
+         #Need to edit code below. Something like fields=row.split('|'). Then use index to bind
+         #variable names to each of the first four columns
+        movie_id, title, released_at, imdb_url = row.split ("|")
+
+        movie = Movie(movie_id=movie_id,
+                       title=title,
+                       released_at= released_at,
+                       imdb_url=imdb_url)
+
+        db.session.add(movie)
+    db.session.commit()
+
+#Need to create this table
 def load_ratings():
     """Load ratings from u.data into database."""
 
